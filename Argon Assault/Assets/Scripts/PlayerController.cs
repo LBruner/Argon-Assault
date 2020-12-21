@@ -12,8 +12,7 @@ public class PlayerController : MonoBehaviour
     [Tooltip("In ms^-1")] [SerializeField] float ySpeed = 3f;
     [SerializeField] float xClamp = 5f;
     [SerializeField] float minusYClamp, plusYClamp;
-
-    bool isControlEnabled = true;
+    [SerializeField] float shotsDelayTime = .3f;
 
     [Header("Screen-positions based")]
     [SerializeField] float positionPitchFactor = -5f;    
@@ -23,11 +22,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float controlPitchFactor = -20f;
     [SerializeField] float controlRollFactor = -20f;
     float horizontalThrow, verticalThrow;
-    
-    void Start()
-    {
-        
-    }
+
+    [Header("Gameobjects References")]
+    [SerializeField] GameObject[] guns;
+    [SerializeField] AudioClip laserShotSFX;
+
+    bool isControlEnabled = true;
 
     // Update is called once per frame
     void Update()
@@ -36,8 +36,25 @@ public class PlayerController : MonoBehaviour
         {
             ProcessRotation();
             ProcessTranslation();
+            ProcessFiring();
         }
-        
+
+        Debug.Log(Debug.isDebugBuild);
+    }
+
+    private void ProcessFiring()
+    {
+        foreach (GameObject gun in guns)
+        {
+            if (CrossPlatformInputManager.GetButton("Fire1"))
+            {
+                gun.gameObject.SetActive(true);
+            }
+            else
+            {
+                gun.gameObject.SetActive(false);
+            }
+        }
     }
 
     void StartDeathSequence()
