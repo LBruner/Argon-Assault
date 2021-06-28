@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +11,11 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] int hits = 10;
 
+    [SerializeField] bool enableCanvas = false;
+
     ScoreBoard scoreBoardScript;
+
+    public static event Action<bool> OnEnemyDeath;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,13 +26,7 @@ public class Enemy : MonoBehaviour
     private void AddBoxCollider()
     {
         Collider boxCollider = gameObject.AddComponent<BoxCollider>();
-        pointsPerKill = Random.Range(20, 140);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        pointsPerKill = UnityEngine.Random.Range(20, 140);
     }
 
     private void OnParticleCollision(GameObject other)
@@ -42,8 +41,10 @@ public class Enemy : MonoBehaviour
 
     private void KillEnemy()
     {
+        OnEnemyDeath?.Invoke(enableCanvas);
         GameObject explosions = Instantiate(enemyExplosionSFX, transform.position, Quaternion.identity);
         explosions.transform.parent = parents;
+        
         Destroy(gameObject);
     }
 }
