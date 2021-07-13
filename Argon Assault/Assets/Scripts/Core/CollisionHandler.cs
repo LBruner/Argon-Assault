@@ -19,12 +19,12 @@ public class CollisionHandler : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isCollisionEnabled && other.tag != "PostProcessing")
+        if (isCollisionEnabled && other.tag != "PostProcessing" && other.tag != "PowerUp")
         {
             SendMessage("StartDeathSequence");
             Invoke("ReloadLevel", loadLevelDelay);
+            explosionSFX.gameObject.SetActive(true);
         }
-        explosionSFX.gameObject.SetActive(true);     
     }
 
     private void ReloadLevel()
