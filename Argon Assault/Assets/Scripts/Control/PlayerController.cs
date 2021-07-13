@@ -76,6 +76,24 @@ namespace RS.Control
             timer += Time.timeScale;
         }
 
+        public void HandlePowerUps(PowerUps.PowerUpType type)
+        {
+            switch (type)
+            {
+                case PowerUps.PowerUpType.fastShoots:
+                    StartCoroutine(EnableFastShoot());
+                    break;
+            }
+        }
+
+        IEnumerator EnableFastShoot()
+        {
+            float oldTime = timeBetweenShots;
+            timeBetweenShots = .5f;
+            yield return new WaitForSeconds(4f);
+            timeBetweenShots = oldTime;
+        } 
+
         void StartDeathSequence()
         {
             isControlEnabled = false;
