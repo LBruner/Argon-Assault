@@ -12,7 +12,9 @@ namespace RS.Control
 
         public enum PowerUpType
         {
-            fastShoots
+            fastShoots,
+            slowMotion,
+            noDamage
         }
 
         private void OnTriggerEnter(Collider other)
