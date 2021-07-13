@@ -34,6 +34,7 @@ namespace RS.Control
         int currentGunIndex;
 
         [SerializeField] float timeBetweenShots = 3f;
+        [SerializeField] GameObject forceField = null;
 
         private void Start()
         {
@@ -83,6 +84,13 @@ namespace RS.Control
                 case PowerUps.PowerUpType.fastShoots:
                     StartCoroutine(EnableFastShoot());
                     break;
+                case PowerUps.PowerUpType.slowMotion:
+                    StartCoroutine(EnableSlowMotion());
+                    break;
+                case PowerUps.PowerUpType.noDamage:
+                    StartCoroutine(EnableNoDamage());
+                    break;
+
             }
         }
 
@@ -90,9 +98,27 @@ namespace RS.Control
         {
             float oldTime = timeBetweenShots;
             timeBetweenShots = .5f;
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(8f);
             timeBetweenShots = oldTime;
-        } 
+        }
+
+        IEnumerator EnableSlowMotion()
+        {
+            float oldTime = Time.timeScale;
+            Time.timeScale = .65f;
+            yield return new WaitForSeconds(8f);
+            Time.timeScale = oldTime;
+        }
+
+        IEnumerator EnableNoDamage()
+        {
+            forceField.gameObject.SetActive(true);
+            Collider playerCollider = GetComponent<Collider>();
+            playerCollider.enabled = false;
+            yield return new WaitForSeconds(5f);
+            playerCollider.enabled = true;
+            forceField.gameObject.SetActive(false);
+        }
 
         void StartDeathSequence()
         {
