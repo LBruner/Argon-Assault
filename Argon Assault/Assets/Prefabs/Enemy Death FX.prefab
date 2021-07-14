@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7553959061149003203}
   - component: {fileID: 7553959061149003202}
   - component: {fileID: 7553959061149003229}
-  - component: {fileID: -4054655780964760411}
   m_Layer: 0
   m_Name: Enemy Death FX
   m_TagString: Untagged
@@ -4712,7 +4711,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: e5379c58bf2bacd429a6b7ce417fe5e1, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4852,15 +4850,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &-4054655780964760411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7553959061149003228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fcc02d80aca65a4983d8c9011bb6672, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

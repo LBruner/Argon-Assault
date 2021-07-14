@@ -31,7 +31,9 @@ namespace RS.Control
         bool isControlEnabled = true;
 
         float timer = 0;
+        float oldTime = 0f;
         int currentGunIndex;
+
 
         [SerializeField] float timeBetweenShots = 3f;
         [SerializeField] GameObject forceField = null;
@@ -39,6 +41,8 @@ namespace RS.Control
         private void Start()
         {
             timer = timeBetweenShots;
+            oldTime = timeBetweenShots;
+            Time.timeScale = 1f;
         }
 
         void Update()
@@ -66,7 +70,6 @@ namespace RS.Control
                         currentGunIndex = 0;
                         timer = 0;
                     }
-                    Debug.Log(timer);
                 }
                 else
                 {
@@ -77,45 +80,47 @@ namespace RS.Control
             timer += Time.timeScale;
         }
 
-        public void HandlePowerUps(PowerUps.PowerUpType type)
+        public void HandlePowerUps(PowerUps.PowerUpType type, float powerUpDuration)
         {
             switch (type)
             {
                 case PowerUps.PowerUpType.fastShoots:
-                    StartCoroutine(EnableFastShoot());
+                    StopAllCoroutines();
+                    StartCoroutine(EnableFastShoot(powerUpDuration));
                     break;
                 case PowerUps.PowerUpType.slowMotion:
-                    StartCoroutine(EnableSlowMotion());
+                    StopCoroutine(EnableFastShoot(0));
+                    StartCoroutine(EnableSlowMotion(powerUpDuration));
                     break;
                 case PowerUps.PowerUpType.noDamage:
-                    StartCoroutine(EnableNoDamage());
+                    StopCoroutine(EnableFastShoot(0));
+                    StartCoroutine(EnableNoDamage(powerUpDuration));
                     break;
-
             }
         }
 
-        IEnumerator EnableFastShoot()
-        {
-            float oldTime = timeBetweenShots;
+         IEnumerator EnableFastShoot(float duration)
+        {           
             timeBetweenShots = .5f;
-            yield return new WaitForSeconds(8f);
+            yield return new WaitForSeconds(duration);
             timeBetweenShots = oldTime;
+            Debug.Log(duration);
         }
 
-        IEnumerator EnableSlowMotion()
+        IEnumerator EnableSlowMotion(float duration)
         {
-            float oldTime = Time.timeScale;
+            float oldTimeScale = Time.timeScale;
             Time.timeScale = .65f;
-            yield return new WaitForSeconds(8f);
-            Time.timeScale = oldTime;
+            yield return new WaitForSeconds(duration);
+            Time.timeScale = oldTimeScale;
         }
 
-        IEnumerator EnableNoDamage()
+        IEnumerator EnableNoDamage(float duration)
         {
             forceField.gameObject.SetActive(true);
             Collider playerCollider = GetComponent<Collider>();
             playerCollider.enabled = false;
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(duration);
             playerCollider.enabled = true;
             forceField.gameObject.SetActive(false);
         }

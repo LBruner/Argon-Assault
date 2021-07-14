@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using RS.Control;
+﻿using System;
 using UnityEngine;
 
 namespace RS.Control
@@ -8,13 +6,18 @@ namespace RS.Control
     public class PowerUps : MonoBehaviour
     {
         [SerializeField] private PowerUpType powerUp;
+        [SerializeField] private float powerUpDuration = 8f;
+       
         private PlayerController player;
+
+        public static Action<PowerUpType> OnEnablePowerUp;
 
         public enum PowerUpType
         {
             fastShoots,
             slowMotion,
-            noDamage
+            noDamage,
+            none
         }
 
         private void OnTriggerEnter(Collider other)
@@ -23,7 +26,9 @@ namespace RS.Control
             {
                 player = other.GetComponent<PlayerController>();
 
-                player.HandlePowerUps(powerUp);
+                player.HandlePowerUps(powerUp, powerUpDuration);
+
+                OnEnablePowerUp?.Invoke(powerUp);
             }
         }
     }

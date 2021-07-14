@@ -10,25 +10,40 @@ namespace RS.Control
         [SerializeField] GameObject enemyExplosionSFX;
         [SerializeField] int pointsPerKill = 15;
         [SerializeField] int hitsToKill = 10;
-        
+        Transform player;
+
+        [SerializeField] float timeBetweenShots = 5f;
+        [SerializeField] GameObject projectillePrefab = null;
+        [SerializeField] Transform projectilleSpawnpoint = null;
         //[SerializeField] bool enableCanvas = false;
 
         public static Action<int> OnEnemyDie;
 
         //public static event Action<bool> OnEnemyDeath;
 
-        void Start()
-        {           
-            AddBoxCollider();
+        void OnEnable()
+        {
+            StartCoroutine(InstantiateProjectille());
         }
 
-        private void AddBoxCollider()
+        private void Update()
         {
-            Collider boxCollider = gameObject.AddComponent<BoxCollider>();
+            player = GameObject.FindWithTag("Player").GetComponent<Transform>();
+            transform.LookAt(player);
+        }
+
+        IEnumerator InstantiateProjectille()
+        {
+            yield return new WaitForSeconds(.5f);
+            Instantiate(projectillePrefab, projectilleSpawnpoint.position, transform.rotation);
+            yield return new WaitForSeconds(timeBetweenShots);
+            Debug.Log("!!");
+            StartCoroutine(InstantiateProjectille());
         }
 
         private void OnParticleCollision(GameObject other)
         {
+            Debug.Log("!");
             hitsToKill--;
             if (hitsToKill <= 0)
             {
