@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3498243902826642960}
   - component: {fileID: 3498243902826642963}
   m_Layer: 11
-  m_Name: SlowMotion
+  m_Name: Invecible
   m_TagString: PowerUp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -124,11 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afd85163f43a1f84f8ab8857e25c1cf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerUp: 1
-  powerUpDuration: 8
-  powerUpGameObject: {fileID: 3480969265269896584, guid: e2aae427d4380b24aa2f0d34b9a5c0f4,
-    type: 3}
-  powerUpParent: {fileID: 0}
+  powerUp: 2
 --- !u!1 &3498243903453021609
 GameObject:
   m_ObjectHideFlags: 0
