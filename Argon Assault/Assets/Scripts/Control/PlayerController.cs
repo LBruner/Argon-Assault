@@ -13,7 +13,6 @@ namespace RS.Control
         [Tooltip("In ms^-1")] [SerializeField] float ySpeed = 3f;
         [SerializeField] float xClamp = 5f;
         [SerializeField] float minusYClamp, plusYClamp;
-        [SerializeField] float shotsDelayTime = .3f;
 
         [Header("Screen-positions based")]
         [SerializeField] float positionPitchFactor = -5f;
@@ -30,8 +29,9 @@ namespace RS.Control
 
         bool isControlEnabled = true;
 
+        float shotsDelayTime = .3f;
+
         float timer = 0;
-        float oldTime = 0f;
         int currentGunIndex;
 
 
@@ -41,7 +41,6 @@ namespace RS.Control
         private void Start()
         {
             timer = timeBetweenShots;
-            oldTime = timeBetweenShots;
             Time.timeScale = 1f;
         }
 
@@ -80,55 +79,6 @@ namespace RS.Control
             timer += Time.timeScale;
         }
 
-        public void HandlePowerUps(PowerUps.PowerUpType type, float powerUpDuration)
-        {
-            switch (type)
-            {
-                case PowerUps.PowerUpType.fastShoots:
-                    StopAllCoroutines();
-                    StartCoroutine(EnableFastShoot(powerUpDuration));
-                    break;
-                case PowerUps.PowerUpType.slowMotion:
-                    StopCoroutine(EnableFastShoot(0));
-                    StartCoroutine(EnableSlowMotion(powerUpDuration));
-                    break;
-                case PowerUps.PowerUpType.noDamage:
-                    StopCoroutine(EnableFastShoot(0));
-                    StartCoroutine(EnableNoDamage(powerUpDuration));
-                    break;
-            }
-        }
-
-         IEnumerator EnableFastShoot(float duration)
-        {           
-            timeBetweenShots = .5f;
-            yield return new WaitForSeconds(duration);
-            timeBetweenShots = oldTime;
-            Debug.Log(duration);
-        }
-
-        IEnumerator EnableSlowMotion(float duration)
-        {
-            float oldTimeScale = Time.timeScale;
-            Time.timeScale = .65f;
-            yield return new WaitForSeconds(duration);
-            Time.timeScale = oldTimeScale;
-        }
-
-        IEnumerator EnableNoDamage(float duration)
-        {
-            forceField.gameObject.SetActive(true);
-            Collider playerCollider = GetComponent<Collider>();
-            playerCollider.enabled = false;
-            yield return new WaitForSeconds(duration);
-            playerCollider.enabled = true;
-            forceField.gameObject.SetActive(false);
-        }
-
-        void StartDeathSequence()
-        {
-            isControlEnabled = false;
-        }
         private void ProcessRotation()
         {
             float dueToPosition = transform.localPosition.y * positionPitchFactor;
@@ -158,6 +108,16 @@ namespace RS.Control
             float clampedXRawPos = Mathf.Clamp(rawXValue, -xClamp, xClamp);
 
             transform.localPosition = new Vector3(clampedXRawPos, clampedYRawPos, transform.localPosition.z); ;
+        }
+
+        public void SetTimeBetweenShots(float newTimeBetweenShots)
+        {
+            timeBetweenShots = newTimeBetweenShots;
+        }
+
+        void StartDeathSequence()
+        {
+            isControlEnabled = false;
         }
     }
 }
