@@ -37,13 +37,11 @@ namespace RS.Control
             yield return new WaitForSeconds(.5f);
             Instantiate(projectillePrefab, projectilleSpawnpoint.position, transform.rotation);
             yield return new WaitForSeconds(timeBetweenShots);
-            Debug.Log("!!");
             StartCoroutine(InstantiateProjectille());
         }
 
         private void OnParticleCollision(GameObject other)
         {
-            Debug.Log("!");
             hitsToKill--;
             if (hitsToKill <= 0)
             {

@@ -1,4 +1,5 @@
 ﻿using RS.Control;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -12,18 +13,24 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject[] PowerUpUIGameobjects = new GameObject[3];
     [SerializeField] Transform powerUpUIParent = null;
 
+    List<PowerUpsController.PowerUpType> enabledPowerUps = new List<PowerUpsController.PowerUpType>();
+
     bool isPowerUpEnabled = false;
-    bool setNewTime = false;
+
+    GameObject lastInstantiatedUI = null;
 
     int points = 0;
-    float timer;
     private float progresImageVelocity;
+
+    private PowerUpsController controller = null;
 
     private void OnEnable()
     {
         Enemy.OnEnemyDie += UpdateScore;
         PlayerHealth.OnDamageTaken += UpdateLifeUI;
-        PowerUps.OnEnablePowerUp += UpdatePowerUpUI;
+        PowerUpsPickup.OnEnablePowerUp += UpdatePowerUpUI;
+
+        controller = FindObjectOfType<PowerUpsController>();
 
         scoreText.text = points.ToString();
     }
@@ -32,17 +39,38 @@ public class UIManager : MonoBehaviour
     {
         Enemy.OnEnemyDie -= UpdateScore;
         PlayerHealth.OnDamageTaken -= UpdateLifeUI;
-        PowerUps.OnEnablePowerUp -= UpdatePowerUpUI;
+        PowerUpsPickup.OnEnablePowerUp -= UpdatePowerUpUI;
     }
 
     void Update()
     {
         UpdateScore(1);
+
     }
 
-    private void UpdatePowerUpUI(PowerUps.PowerUpType type)
+    private void UpdatePowerUpUI(PowerUpsController.PowerUpType type)
     {
-        Instantiate(PowerUpUIGameobjects[(int)type], powerUpUIParent);
+        if(!enabledPowerUps.Contains(type))
+        {
+            lastInstantiatedUI = Instantiate(PowerUpUIGameobjects[(int)type], powerUpUIParent);
+            enabledPowerUps.Add(type);
+        }
+        else
+        {
+            lastInstantiatedUI.GetComponent<Animator>().Play("PowerUp", 0, 0);
+        }
+
+        // if(enabledPowerUps.Contains(type) && obj != null)
+        // {
+        //     Debug.Log(enabledPowerUps.Count);
+        //     obj.GetComponent<Animator>().Play("PowerUp", 0, 0);
+        // }
+        // else
+        // {
+        //     obj = Instantiate(PowerUpUIGameobjects[(int)type], powerUpUIParent);
+        //     enabledPowerUps.Add(type);
+        // }
+
     }
 
     public void UpdateScore(int pointsPerkill)
